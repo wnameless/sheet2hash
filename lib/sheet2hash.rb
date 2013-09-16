@@ -6,14 +6,14 @@ module Sheet2hash
   class Workbook
     include Options, Errors
     
-    def initialize(path, opts = {})
+    def initialize path, opts = {}
       @workbook = Roo::Spreadsheet.open path
       @opts = process_options opts
       @sheet_opts = {}
       set_sheet_attributes
     end
     
-    def turn_to(sheet, sheet_opts = {})
+    def turn_to sheet, sheet_opts = {}
       if sheet.kind_of?(Integer) && sheet <= sheets.size
         @workbook.default_sheet = sheets[sheet - 1]
         @sheet_opts = process_options sheet_opts
@@ -62,7 +62,7 @@ module Sheet2hash
       @columns = columns
     end
     
-    def trim_int_cell(cell)
+    def trim_int_cell cell
       cell.kind_of?(Numeric) && cell % 1 == 0 ? cell.to_i : cell
     end
     
@@ -77,7 +77,7 @@ module Sheet2hash
       end
     end
     
-    def collect_columns(columns, opts)
+    def collect_columns columns, opts
       columns.keep_if { |col| opts[:keep_col].include? col } if opts[:keep_col]
       columns = columns - opts[:skip_col] if opts[:skip_col]
       columns
@@ -108,7 +108,7 @@ module Sheet2hash
       end
     end
     
-    def collect_rows(rows, opts)
+    def collect_rows rows, opts
       rows.keep_if { |row| opts[:keep_row].include? row } if opts[:keep_row]
       rows = rows - opts[:skip_row] if opts[:skip_row]
       rows = rows - [@workbook.first_row] unless opts[:keep_row] && opts[:keep_row].include?(1)
@@ -128,11 +128,11 @@ module Sheet2hash
       match_header_with_columns header
     end
     
-    def match_header_with_columns(header)
+    def match_header_with_columns header
       header.each_with_index.select { |h, i| columns.include?(i + 1) }.map { |i| i.first }
     end
     
-    def process_header(header)
+    def process_header header
       if header.kind_of? Array
         unique_header header
       elsif header.kind_of? Integer
@@ -142,13 +142,13 @@ module Sheet2hash
       end
     end
     
-    def header_from_row(row)
+    def header_from_row row
       header = []
       (@workbook.first_column..@workbook.last_column).each { |col| header << @workbook.cell(row, col) }
       unique_header header
     end
     
-    def unique_header(header)
+    def unique_header header
       header.reverse!
       dup_header = header.dup
       header = header.map do |field|

@@ -6,6 +6,7 @@ class WorkbookTest < Test::Unit::TestCase
   def setup
     @header = Sheet2hash::Workbook.new File.expand_path('../header.xls', __FILE__)
     @no_header = Sheet2hash::Workbook.new File.expand_path('../no-header.xls', __FILE__)
+    @dup_header = Sheet2hash::Workbook.new File.expand_path('../dup-header.xls', __FILE__)
   end
   
   def test_turn_to
@@ -79,5 +80,9 @@ class WorkbookTest < Test::Unit::TestCase
   def test_option_skip_col
     @header.turn_to 1, skip_col: [2, 3]
     assert_equal [{ 'col1' => 1 }, { 'col1' => 'one' }], @header.to_a
+  end
+  
+  def test_uniq_unique_header
+    assert_equal [{ 'col' => 1, 'col_dup' => 2, 'col_dup2' => 3 }, { 'col' => 'one', 'col_dup' => 'two', 'col_dup2' => 'three' }], @dup_header.to_a
   end
 end
