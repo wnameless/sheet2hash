@@ -89,8 +89,8 @@ module Sheet2hash
     end
     
     def last_row
-      last_row = @sheet_opts[:end] || @opts[:end]
-      last_row || @workbook.last_row
+      last_row = @sheet_opts[:end] || @opts[:end] || @workbook.last_row
+      last_row > @workbook.last_row ? @workbook.last_row : last_row
     end
     
     def rows
@@ -101,6 +101,8 @@ module Sheet2hash
       elsif @opts[:keep_row] || @opts[:skip_row]
         rows = collect_rows rows, @opts
         rows - [@opts[:header]]
+      elsif @sheet_opts[:header].kind_of?(Integer) || @sheet_opts[:header].kind_of?(Integer)
+        rows - [@sheet_opts[:header] || @sheet_opts[:header]]
       else
         rows - [@workbook.first_row]
       end
@@ -109,6 +111,10 @@ module Sheet2hash
     def collect_rows(rows, opts)
       rows.keep_if { |row| opts[:keep_row].include? row } if opts[:keep_row]
       rows = rows - opts[:skip_row] if opts[:skip_row]
+      rows = rows - [@workbook.first_row] unless opts[:keep_row] && opts[:keep_row].include?(1)
+      unless opts[:header].kind_of?(Integer) && opts[:keep_row].include?(opts[:header])
+        rows = rows - [opts[:header]]
+      end
       rows
     end
     
