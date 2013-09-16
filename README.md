@@ -1,6 +1,6 @@
 # Sheet2hash
 
-Convert Excel or Spreadsheet to Ruby hash
+Convert Excel or Spreadsheet to Ruby Hash
 
 ## Installation
 

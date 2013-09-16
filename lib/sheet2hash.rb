@@ -2,10 +2,17 @@ require 'roo'
 require 'sheet2hash/errors'
 require 'sheet2hash/options'
 
+# Sheet2hash
+# @author Wei-Ming Wu
 module Sheet2hash
+  # Sheet2hash::Workbook converts Excel or Spreadsheet into Ruby Hash.
+  # @author Wei-Ming Wu
   class Workbook
     include Options, Errors
     
+    # Creates a Workbook.
+    #
+    # @return [Workbook] a Workbook object
     def initialize path, opts = {}
       @workbook = Roo::Spreadsheet.open path
       @opts = process_options opts
@@ -13,6 +20,17 @@ module Sheet2hash
       set_sheet_attributes
     end
     
+    # Turns to specified sheet of this Workbook.
+    #
+    # @param sheet [String, Integer] the name or index(1-based) of a sheet
+    # @param sheet_opts [Hash] the options of turn_to
+    # @option sheet_opts [Array, Integer] :header using an Array to store the header of this sheet or choosing an index(1-based) of rows as the header
+    # @option sheet_opts [Integer] :start the index(1-based) of rows to start
+    # @option sheet_opts [Integer] :end the index(1-based) of rows to end
+    # @option sheet_opts [Integer] :keep_row the indices(1-based) of rows to keep
+    # @option sheet_opts [Integer] :skip_row the indices(1-based) of rows to skip
+    # @option sheet_opts [Integer] :keep_col the indices(1-based) of columns to keep
+    # @option sheet_opts [Integer] :skip_col the indices(1-based) of columns to skip
     def turn_to sheet, sheet_opts = {}
       if sheet.kind_of?(Integer) && sheet <= sheets.size
         @workbook.default_sheet = sheets[sheet - 1]
@@ -27,14 +45,23 @@ module Sheet2hash
       end
     end
     
+    # Returns all sheets of this Workbook.
+    #
+    # @return [Array] all sheets of this Workbook
     def sheets
       @workbook.sheets
     end
     
+    # Returns the name of current sheet.
+    #
+    # @return [String]  the name of current sheet
     def sheet
       @workbook.default_sheet
     end
     
+    # Converts all sheets to a Hash, sheet names are the keys, values are Array of Hash.
+    #
+    # @return [Hash] sheet names are the keys, values are Array of Hash
     def to_h
       hash = {}
       sheets.each do |sheet|
@@ -44,6 +71,9 @@ module Sheet2hash
       hash
     end
     
+    # Converts current sheet to an Array of Hash.
+    #
+    # @param [Array] Array of Hash
     def to_a
       ary = []
       @rows.each do |row|

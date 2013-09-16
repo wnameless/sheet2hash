@@ -1,5 +1,8 @@
 module Sheet2hash
+  # Sheet2hash::Options processes the options of Sheet2hash.
+  # @author Wei-Ming Wu
   module Options
+    # Regulates options of Sheet2hash.
     def process_options opts
       regulate_options opts
       opts
