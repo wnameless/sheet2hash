@@ -4,7 +4,7 @@ require 'sheet2hash/options'
 
 module Sheet2hash
   class Workbook
-    include Options
+    include Options, Errors
     
     def initialize(path, opts = {})
       @workbook = Roo::Spreadsheet.open path
@@ -55,6 +55,7 @@ module Sheet2hash
     end
     
     private
+    
     def set_sheet_attributes
       @header = header
       @rows = rows
